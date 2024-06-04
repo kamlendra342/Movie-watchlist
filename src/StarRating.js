@@ -1,4 +1,5 @@
 import { useState } from "react"
+import PropTypes from "prop-types";
 const ContainerStyle = {
     display: "flex",
     alignitems: "center",
@@ -10,10 +11,21 @@ const StarContainerStyle = {
     gap :"4px"
 }
 
+StarRating.propTypes = {
+    onSetRating:PropTypes.func,
+}
 
-export default function StarRating({maxRating = 5 ,color="#fcc419", size="48"}) {
+export default function StarRating({maxRating = 10 ,color="#fcc419", size="48",onSetRating,}) {
     const [rating, setRating] = useState(0);
     const [temprating, settemprating] = useState(0);
+
+    function handleRating(rating) {
+        setRating(rating);
+        onSetRating(rating);
+    }
+
+
+
 
     const textstyle = {
         lineHeight: "1",
@@ -26,7 +38,7 @@ export default function StarRating({maxRating = 5 ,color="#fcc419", size="48"}) 
         <div style={StarContainerStyle}>
             {Array.from({ length: maxRating }, (_, i) => (<Star
                 key={i}
-                onRate={() => setRating(i + 1)}
+                onRate={() => handleRating(i + 1)}
                 full={temprating ? temprating >= i + 1 : rating >= i + 1}
                 onHoverIn={() => settemprating(i + 1)}
                 onHovreOut={() => settemprating(0)}
