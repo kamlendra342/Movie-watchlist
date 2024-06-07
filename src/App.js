@@ -116,10 +116,10 @@ export default function App() {
           {error && <ErrorMessage message={error}/>}
         </Box>
         <Box>{
-          selectedID ? <SelectedMovie selectedID={selectedID} CloseSelected={handleCloseselectedID} /> : (
+          selectedID ? <SelectedMovie selectedID={selectedID} CloseSelected={handleCloseselectedID} setWatched={setWatched} watched={watched} /> : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} />
+              <WatchedMoviesList watched={watched} setWatched={setWatched} />
             </>)
         }
         </Box>
@@ -137,7 +137,20 @@ function ErrorMessage({ message }) {
 }
 
 function Loading() {
-  return (<div className="loader"> Loading ... </div>)
+  return (<div className="loader">
+    <div class="center">
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+</div>
+  </div>)
 }
 
 function NavBar({children}) {
@@ -224,19 +237,19 @@ function MovieList({movies,handelselectedID}) {
 }; */
 
 
-function SelectedMovie({ selectedID, CloseSelected }) {
+function SelectedMovie({ selectedID, CloseSelected ,setWatched,watched}) {
   const [movie, setMovie] = useState({});
   const [addingbtn, setaddingbtn] = useState(false);
   const [loading, setloading] = useState(false);
   const [userRating, setuserRating] = useState("");
+  let myrating=0;
   
   function handleaddingbtn() {
     setaddingbtn(!addingbtn)
   }
 
   function handlewatchedlist(moviedata,userRating) {
-    console.log(moviedata)
-    tempWatchedData.push({
+    const newmovie={
       imdbID: moviedata.imdbID,
       Title: moviedata.Title,
       Year: moviedata.Year,
@@ -244,7 +257,9 @@ function SelectedMovie({ selectedID, CloseSelected }) {
       runtime: moviedata.Runtime.split(" ")[0],
       imdbRating: moviedata.imdbRating,
       userRating,
-    });
+    };
+    setWatched(watched => [...watched, newmovie]);
+
     (() => {
       CloseSelected();
     })();
@@ -281,7 +296,7 @@ function SelectedMovie({ selectedID, CloseSelected }) {
     Moviedetail();
   },[selectedID])
 
-  return <>(
+  return <>
     <div className="details">
       {
         loading ? <Loading /> : (<><header>
@@ -298,12 +313,15 @@ function SelectedMovie({ selectedID, CloseSelected }) {
           </div>
         </header>
           <section>
-            <div className="rating" onClick={handleaddingbtn} >
+            {watched.some(el => el.imdbID === movie.imdbID && (myrating = el.userRating)) ? <div className="rating">
+              <h3>{`You have alredy added with ${myrating} ⭐ `}</h3>
+            </div> :
+            (<div className="rating" onClick={handleaddingbtn} >
               <StarRating maxRating={10} color="#fcc419" size={20} onSetRating={setuserRating}/>
               {
                 addingbtn ? <button className="btn-add" onClick={()=>{handlewatchedlist(movie,userRating)}}>Add item + </button> : <></>
               }
-            </div>
+            </div>)}
             <p>
               <em>{plot}</em>
             </p>
@@ -311,7 +329,7 @@ function SelectedMovie({ selectedID, CloseSelected }) {
             <p>Directed by {director}</p>
           </section></>
         )}
-    </div>)
+    </div>
     </>
 }
 
@@ -345,13 +363,14 @@ function WatchedSummary({ watched }) {
 </div>
 };
 
-function WatchedMoviesList({ watched }) {
+function WatchedMoviesList({ watched ,setWatched}) {
 
-  function handeldelbtn(e) {
+  function handeldelbtn(moviedata) {
+    const updatedWatched = watched.filter((movie) => movie.imdbID !== moviedata.imdbID);
+    setWatched(updatedWatched);
     
-    console.log(e);
-    console.log("delll")
   }
+  
 
   return <ul className="list">
     {watched.map((movie) => (
@@ -371,7 +390,7 @@ function WatchedMoviesList({ watched }) {
             <span>⏳</span>
             <span>{movie.runtime} min</span>
           </p>
-          <button className="btn-delete" onClick={(e)=>console.log(e)}>X</button>
+          <button className="btn-delete" onClick={()=>handeldelbtn(movie)}>X</button>
         </div>
       </li>
     ))}
