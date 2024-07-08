@@ -70,7 +70,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 💬 Contact
 
-Kamlendra - [@https://x.com/_kamlendra_]
+Kamlendra - [https://x.com/_kamlendra_]
 
 Project Link: [https://github.com/kamlendra342/Movie-watchlist](https://github.com/kamlendra342/Movie-watchlist)
 
