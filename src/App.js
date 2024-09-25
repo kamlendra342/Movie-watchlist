@@ -14,7 +14,9 @@ export default function App() {
   // use state can receive an function but with no arguments 
   const [watched, setWatched] = useState(function () {
     const storedmovie = localStorage.getItem("watched")
-    return JSON.parse(storedmovie);
+    const movie = JSON.parse(storedmovie);
+    if (!movie) return [];
+    return movie;
   });
   const [isLoading, setisLoading] = useState(false);
   const [error, seterror] = useState("");
@@ -109,8 +111,9 @@ function ErrorMessage({ message }) {
 }
 
 function Loading() {
-  return (<div className="loader">
-    <div className="center">
+  return (
+/*   <div className="loader">
+  <div className="center">
   <div className="wave"></div>
   <div className="wave"></div>
   <div className="wave"></div>
@@ -121,8 +124,28 @@ function Loading() {
   <div className="wave"></div>
   <div className="wave"></div>
   <div className="wave"></div>
+  </div>
+  </div> */
+    
+  <div class="loader">
+  <div class="circle">
+    <div class="dot"></div>
+    <div class="outline"></div>
+  </div>
+  <div class="circle">
+    <div class="dot"></div>
+    <div class="outline"></div>
+  </div>
+  <div class="circle">
+    <div class="dot"></div>
+    <div class="outline"></div>
+  </div>
+  <div class="circle">
+    <div class="dot"></div>
+    <div class="outline"></div>
+  </div>
 </div>
-  </div>)
+  )
 }
 
 function NavBar({children}) {
@@ -240,7 +263,7 @@ function SelectedMovie({ selectedID, CloseSelected ,setWatched,watched}) {
   }
 
   const { Title: title,
-    Year: year,
+/*     Year: year, */
     Poster: poster,
     Runtime: runtime,
     imdbRating,
@@ -355,8 +378,6 @@ function WatchedMoviesList({ watched ,setWatched}) {
     setWatched(updatedWatched);
     
   }
-  
-
   return <ul className="list">
     {watched.map((movie) => (
       <li key={movie.imdbID}>
