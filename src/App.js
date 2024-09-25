@@ -325,7 +325,7 @@ function SelectedMovie({ selectedID, CloseSelected ,setWatched,watched}) {
               <h3>{`You have alredy added with ${myrating} ⭐ `}</h3>
             </div> :
             (<div className="rating" onClick={handleaddingbtn} >
-              <StarRating maxRating={10} color="#fcc419" size={20} onSetRating={setuserRating}/>
+              <StarRating maxRating={10} color="#fcc419" size={25} onSetRating={setuserRating}/>
               {
                 addingbtn ? <button className="btn-add" onClick={()=>{handlewatchedlist(movie,userRating)}}>Add item + </button> : <></>
               }
